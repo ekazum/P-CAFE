@@ -38,19 +38,18 @@ Navigate to the **`data`** directory for instructions.
 
 ## **Running the Code**
 
-1. run the requrments.txt file to install the required packages.
+1. run the requirements.txt file to install the required packages.
 
 2. Dataset Configuration
 
-Open `embedder_guesser.py` and choose your dataset by modifying the `--data` argument in the `FLAG` section.
+    Open `embedder_guesser.py` and choose your dataset by modifying the `--data` argument in the `FLAG` section.
 
-Supported datasets:
-- `pcafe_utils.load_time_Series()` – eICU time series data
-- `pcafe_utils.load_mimic_text()` – MIMIC-III multimodal data (includes clinical text)
-- `pcafe_utils.load_mimic_time_series()` – MIMIC-III numeric time series
+    Supported datasets:
+    - `pcafe_utils.load_time_Series()` – eICU time series data
+    - `pcafe_utils.load_mimic_text()` – MIMIC-III multimodal data (includes clinical text)
+    - `pcafe_utils.load_mimic_time_series()` – MIMIC-III numeric time series
 
-Define the feature costs by setting `self.cost_list` in the `MultimodalGuesser` class.
-
+    Define the feature costs by setting `self.cost_list` in the `MultimodalGuesser` class.
 
 3. Running the embedder_guesser Module
 

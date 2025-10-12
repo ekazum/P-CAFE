@@ -8,6 +8,7 @@ from pathlib import Path
 from PIL import Image
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 
@@ -91,7 +92,7 @@ def map_time_series(sample):
     """
     Map features to indices based on their type.
     If any value in a column is a string, treat the column as text.
-    :param data: 2D array-like dataset (list of lists, numpy array, or pandas DataFrame)
+    :param sample: 2D array-like dataset (list of lists, numpy array, or pandas DataFrame)
     :return: A dictionary mapping feature indices to lists of indices and the total number of features
     """
     index_map = {}
