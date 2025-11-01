@@ -15,65 +15,72 @@ import pcafe_utils
 import pandas as pd
 import json
 from pathlib import Path
+from load_config import load_hierarchical_config
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# Load JSON configuration
-with open(r'C:\Users\kashann\PycharmProjects\PCAFE-MIMIC\Integration\user_config_naama.json', 'r') as f:
-    config = json.load(f)
+# Load hierarchical configuration: base_config.json -> user_config.json -> CLI args
+# First, load base and user configs
+config = load_hierarchical_config(
+    base_config_path="base_config.json",
+    user_config_path="user_config.json"
+)
 
-# Get the project path from the JSON
-project_path = Path(config["user_specific_project_path"])
+# Extract embedder_guesser configuration with fallback to root-level config
+embedder_config = config.get("embedder_gueser", {})  # Note: typo in original config file
 
+# Get the project path from the JSON configuration
+project_path = Path(config.get("user_specific_project_path", os.getcwd()))
+
+# Define argument parser with defaults from configuration
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--directory",
                     type=str,
-                    default=project_path,
+                    default=str(project_path),
                     help="Directory for saved models")
 parser.add_argument("--hidden-dim1",
                     type=int,
-                    default=64,
+                    default=embedder_config.get("hidden_dim1", 64),
                     help="Hidden dimension")
 parser.add_argument("--hidden-dim2",
                     type=int,
-                    default=32,
+                    default=embedder_config.get("hidden-dim2", 32),
                     help="Hidden dimension")
 parser.add_argument("--lr",
                     type=float,
-                    default=1e-4,
+                    default=embedder_config.get("lr", 1e-4),
                     help="Learning rate")
 parser.add_argument("--weight_decay",
                     type=float,
-                    default=0.001,
+                    default=embedder_config.get("weight_decay", 0.001),
                     help="l_2 weight penalty")
-# change these parameters
 parser.add_argument("--num_epochs",
                     type=int,
-                    default=100000,
+                    default=embedder_config.get("num_epochs", 100000),
                     help="number of epochs")
 parser.add_argument("--val_trials_wo_im",
                     type=int,
-                    default=500,
+                    default=embedder_config.get("val_trials_wo_im", 500),
                     help="Number of validation trials without improvement")
 parser.add_argument("--fraction_mask",
-                    type=int,
-                    default=0,
+                    type=float,
+                    default=embedder_config.get("fraction_mask", 0),
                     help="fraction mask")
 parser.add_argument("--run_validation",
                     type=int,
-                    default=100,
+                    default=embedder_config.get("run_validation", 100),
                     help="after how many epochs to run validation")
 parser.add_argument("--batch_size",
                     type=int,
-                    default=128,
-                    help="bach size")
+                    default=embedder_config.get("batch_size", 128),
+                    help="batch size")
 parser.add_argument("--text_embed_dim",
                     type=int,
-                    default=768,
+                    default=embedder_config.get("text_embed_dim", 768),
                     help="Text embedding dimension")
 parser.add_argument("--reduced_dim",
                     type=int,
-                    default=20,
+                    default=embedder_config.get("reduced_dim", 20),
                     help="Reduced dimension for text embedding")
 parser.add_argument("--save_dir",
                     type=str,
@@ -91,7 +98,7 @@ parser.add_argument(
     )
 )
 
-FLAGS = parser.parse_args(args=[])
+FLAGS = parser.parse_args()
 
 
 class ImageEmbedder(nn.Module):
