@@ -33,3 +33,10 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+/config/user_config.json
+/data/input/data_time_series/test_X.csv
+/data/input/data_time_series/test_y.csv
+/data/input/data_time_series/train_X.csv
+/data/input/data_time_series/train_y.csv
+/data/input/data_time_series/val_X.csv
+/data/input/data_time_series/val_y.csv

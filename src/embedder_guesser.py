@@ -11,19 +11,26 @@ from sklearn.model_selection import train_test_split
 from transformers import AutoModel, AutoTokenizer, \
     BartForConditionalGeneration, BartTokenizer
 import argparse
-import pcafe_utils
+from src import pcafe_utils
 import pandas as pd
 import json
 from pathlib import Path
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+#System defaults
+NUM_EPOCHS = 100
+VAL_TRIALS_WO_IM = 500
+
 # Load JSON configuration
-with open(r'C:\Users\kashann\PycharmProjects\PCAFE-MIMIC\Integration\user_config_naama.json', 'r') as f:
+#with open(r'C:\Users\kashann\PycharmProjects\PCAFE-MIMIC\Integration\user_config_naama.json', 'r') as f:
+#    config = json.load(f)
+with open(r'config\user_config.json', 'r') as f:
     config = json.load(f)
 
 # Get the project path from the JSON
 project_path = Path(config["user_specific_project_path"])
+
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--directory",
@@ -46,14 +53,13 @@ parser.add_argument("--weight_decay",
                     type=float,
                     default=0.001,
                     help="l_2 weight penalty")
-# change these parameters
 parser.add_argument("--num_epochs",
                     type=int,
-                    default=100000,
-                    help="number of epochs")
+                    default=int(config.get("embedder_guesser", {}).get("num_epochs", NUM_EPOCHS)),
+                    help="number of epochs (can be set in `config\\user_config.json`)")
 parser.add_argument("--val_trials_wo_im",
                     type=int,
-                    default=500,
+                    default=int(config.get("embedder_guesser", {}).get("val_trials_wo_im", VAL_TRIALS_WO_IM)),
                     help="Number of validation trials without improvement")
 parser.add_argument("--fraction_mask",
                     type=int,
@@ -85,13 +91,13 @@ parser.add_argument(
     default="pcafe_utils.load_time_Series()",
     help=(
         "Dataset loader function to use. Options:\n"
-        "  pcafe_utils.load_time_Series()        - eICU time series data\n"
-        "  pcafe_utils.load_mimic_text()         - MIMIC-III multi-modal (includes text)\n"
-        "  pcafe_utils.load_mimic_time_series()  - MIMIC-III numeric time series data"
+        "  load_time_Series        - eICU time series data\n"
+        "  load_mimic_text         - MIMIC-III multi-modal (includes text)\n"
+        "  load_mimic_time_series  - MIMIC-III numeric time series data"
     )
 )
 
-FLAGS = parser.parse_args(args=[])
+FLAGS = parser.parse_args()
 
 
 class ImageEmbedder(nn.Module):
@@ -759,7 +765,7 @@ def train_model(model,
                 print('Did not achieve val AUC improvement for {} trials, training is done.'.format(
                     FLAGS.val_trials_wo_im))
                 break
-        # print("finished " + str(j) + " out of " + str(nepochs) + " epochs")
+        print("finished " + str(j) + " out of " + str(nepochs) + " epochs")
 
     plot_running_loss(loss_list)
 
