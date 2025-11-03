@@ -51,8 +51,33 @@ Navigate to the **`data`** directory for instructions.
 
 1. run the requirements.txt file to install the required packages.
 
-2. Dataset Configuration
+2. Configuration Setup
 
+    The project uses a hierarchical configuration system. See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed documentation.
+    
+    **Quick Start:**
+    - Default configuration is in `src/base_config.json`
+    - Create `src/user_config.json` to override defaults (optional)
+    - Use command-line arguments for runtime overrides
+    
+    Example:
+    ```bash
+    python src/embedder_guesser.py --num_epochs 5000 --batch_size 256
+    ```
+
+3. Dataset Configuration
+
+    Choose your dataset using the `--data` command-line argument:
+
+    Supported datasets:
+    - `pcafe_utils.load_time_Series()` – eICU time series data (default)
+    - `pcafe_utils.load_mimic_text()` – MIMIC-III multimodal data (includes clinical text)
+    - `pcafe_utils.load_mimic_time_series()` – MIMIC-III numeric time series
+    
+    Example:
+    ```bash
+    python src/embedder_guesser.py --data pcafe_utils.load_mimic_text()
+    ```
     Open `embedder_guesser.py` and choose your dataset by modifying the `--data` argument passed to the program from runtime command
 
     Supported datasets:
@@ -62,9 +87,9 @@ Navigate to the **`data`** directory for instructions.
 
     Define the feature costs by setting `self.cost_list` in the `MultimodalGuesser` class.
 
-3. Running the embedder_guesser Module
+4. Running the embedder_guesser Module
 
-4. For the DDQN agent run **`main_robust.py in the DDQN folder`**, for other agent run **`main_sb3.py`** in the Agents folder and choose the RL agent.
+5. For the DDQN agent run **`main_robust.py in the DDQN folder`**, for other agent run **`main_sb3.py`** in the Agents folder and choose the RL agent.
 
 
 ## **Another Example**

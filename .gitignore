@@ -33,6 +33,10 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+
+# User-specific configuration files
+src/user_config.json
+user_config_*.json
 /config/user_config.json
 /data/input/data_time_series/test_X.csv
 /data/input/data_time_series/test_y.csv
