@@ -25,9 +25,20 @@ P-CAFE iteratively selects features in stages, personalizing the FS process to i
 
 To generate the benchmark datasets:  
 - **MIMIC-III Numeric**  
+  - git clone to https://github.com/YerevaNN/mimic3-benchmarks 
+  - Follow the instructions in the README file to build benchmark data 
+  - Add to folder .\mimic3-benchmarks\mimic3models\in_hospital_mortality\logistic the following file from data directory: mimicIII_numeric.ipynb
+  - Run the notebook file
 - **MIMIC-III with Costs**  
+  - In order to assign cost:
+    1. run the mimicIII_numeric.ipynb
+    2. In class myEnv(gymnasium.Env) in DDQN/env_robust.py, define the attribute self.cost_list = [1,2,6,1,1,1,1,7,1,1,2,7,2,2,1,1,7,1]
+    to do this uncomment line 18 and comment line 19 in __init__ method
 - **MIMIC-III Multi-Modal Dataset**  
 - **eICU Dataset**
+  - git clone to the repository: https://github.com/mostafaalishahi/eICU_Benchmark.git
+  - Follow the code to extract the time series data for inhospital mortality in 48 hours
+save the time series data
 
 Navigate to the **`data`** directory for instructions.
 
@@ -67,6 +78,12 @@ Navigate to the **`data`** directory for instructions.
     ```bash
     python src/embedder_guesser.py --data pcafe_utils.load_mimic_text()
     ```
+    Open `embedder_guesser.py` and choose your dataset by modifying the `--data` argument passed to the program from runtime command
+
+    Supported datasets:
+    - `load_time_Series` – eICU time series data
+    - `load_mimic_text` – MIMIC-III multimodal data (includes clinical text)
+    - `load_mimic_time_series` – MIMIC-III numeric time series
 
     Define the feature costs by setting `self.cost_list` in the `MultimodalGuesser` class.
 

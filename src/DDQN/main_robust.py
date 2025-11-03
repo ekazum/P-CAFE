@@ -6,7 +6,9 @@ from src.DDQN.agent import *
 from src.DDQN.PrioritiziedReplayMemory import *
 from sklearn.metrics import roc_auc_score, average_precision_score
 import time
-with open(r'C:\Users\kashann\PycharmProjects\PCAFE-MIMIC\Integration\user_config_naama.json', 'r') as f:
+#with open(r'C:\Users\kashann\PycharmProjects\PCAFE-MIMIC\Integration\user_config_naama.json', 'r') as f:
+#    config = json.load(f)
+with open(r'config\user_config.json', 'r') as f:
     config = json.load(f)
 
 # Get the project path from the JSON

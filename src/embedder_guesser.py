@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from transformers import AutoModel, AutoTokenizer, \
     BartForConditionalGeneration, BartTokenizer
 import argparse
-import pcafe_utils
+from src import pcafe_utils
 import pandas as pd
 import json
 from pathlib import Path
@@ -92,9 +92,9 @@ parser.add_argument(
     default="pcafe_utils.load_time_Series()",
     help=(
         "Dataset loader function to use. Options:\n"
-        "  pcafe_utils.load_time_Series()        - eICU time series data\n"
-        "  pcafe_utils.load_mimic_text()         - MIMIC-III multi-modal (includes text)\n"
-        "  pcafe_utils.load_mimic_time_series()  - MIMIC-III numeric time series data"
+        "  load_time_Series        - eICU time series data\n"
+        "  load_mimic_text         - MIMIC-III multi-modal (includes text)\n"
+        "  load_mimic_time_series  - MIMIC-III numeric time series data"
     )
 )
 
@@ -766,7 +766,7 @@ def train_model(model,
                 print('Did not achieve val AUC improvement for {} trials, training is done.'.format(
                     FLAGS.val_trials_wo_im))
                 break
-        # print("finished " + str(j) + " out of " + str(nepochs) + " epochs")
+        print("finished " + str(j) + " out of " + str(nepochs) + " epochs")
 
     plot_running_loss(loss_list)
 
